@@ -1,81 +1,56 @@
-import React, { PureComponent } from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BlogServices from '../services/BlogServices';
 
-class CreateBlogComponent extends PureComponent {
-    constructor(props) {
-        super(props)
+const CreateBlogComponent = () => {
+  const [userId, setUserId] = useState('');
+  const [title, setTitle] = useState('');
+  const [email, setEmail] = useState('');
+  const [content, setContent] = useState('');
 
-        this.state = {
-            userId:'',
-            title:'',
-            content:'',
-        }
+  const saveBlog = () => {
+    if (userId.length === 0 || title.length === 0 || content.length === 0 || email.length === 0) {
+        window.alert('Enter all the fields');
+        return;
+      }
+    
+      const blog = { userId, email, title, content };
+      console.log('Blogs => ' + JSON.stringify(blog));
+    
+      BlogServices.addBlogs(blog).then((res) => {
+        window.alert('Blog added Successfully');
+      });
+  };
 
-        this.changeTitleHandler=this.changeTitleHandler.bind(this);
-        this.changeContentHandler=this.changeContentHandler.bind(this);
-        this.changeUserIdHandler=this.changeUserIdHandler.bind(this);
-        this.saveBlog=this.saveBlog.bind(this);
-    }
+  const cancel = () => {
+    console.log('cancel');
+  };
 
-    saveBlog()
-    {
-        let blog={userId: this.state.userId, title: this.state.title, content: this.state.content};
-        console.log("Blogs=> "+JSON.stringify(blog));
-        if(this.state.userId.length==0 || this.state.title.length==0 || this.state.content.length==0)
-        {
-             window.alert("Enter all the fields");
-             return;
-        }
-        BlogServices.addBlogs(blog).then(res=>
-            {
-                window.alert("Blog added Successfully");
-            });
-
-    }
-
-    cancel()
-    {
-        console.log("cancel");
-    }
-
-    changeTitleHandler=(event)=>
-    {
-        this.setState({title: event.target.value});
-    }
-
-    changeUserIdHandler=(event)=>{
-        this.setState({userId: event.target.value});
-    }
-
-    changeContentHandler=(event)=>
-    {
-        this.setState({content: event.target.value}); 
-    }
-
-    render() {
-        return (
-            <div className='container' style={{padding:"100px"}}>
-                <h2 className='text-center'>Add Blog</h2>
-                <div className='card' style={{padding: "50px"}}>
-                    <form className='container' style={{height: "500px", display: "flex", alignItems:"center", justifyContent:"space-between", flexDirection:"column"}}>
-                            <input onChange={this.changeUserIdHandler} value={this.state.userId} name='userId' className="form-control" placeholder="UserId..."></input>
-                            <input onChange={this.changeTitleHandler} value={this.state.title} name='title' type="text" className="form-control"  placeholder="Title..."></input>
-                            <textarea onChange={this.changeContentHandler} value={this.state.content} name='content' style={{height: "300px"}} placeholder='Content...' className="form-control" rows="3"></textarea>
-                            <div style={{display:'flex',justifyContent:"space-between", width: "150px"}}>
-                            <div className='row'> 
-                                <Link to='/blogs' onClick={this.saveBlog.bind(this)} className='btn btn-primary w-60'>Save</Link>
-                            </div>
-                            <div className='row'> 
-                                <Link to='/blogs' onClick={this.cancel.bind(this)} className='btn btn-danger w-60'>Cancel</Link>
-                            </div>
-                            </div>
-                    </form>
-                </div>
+  return (
+    <div className='container' style={{ padding: '100px' }}>
+      <h2 className='text-center'>Add Blog</h2>
+      <div className='card' style={{ padding: '50px' }}>
+        <form className='container' style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column' }}>
+          <input onChange={(e) => setUserId(e.target.value)} value={userId} name='userId' className='form-control' placeholder='UserId...'></input>
+          <input onChange={(e) => setEmail(e.target.value)} value={email} name='emailId' type='email' className='form-control' placeholder='Email...'></input>
+          <input onChange={(e) => setTitle(e.target.value)} value={title} name='title' type='text' className='form-control' placeholder='Title...'></input>
+          <textarea onChange={(e) => setContent(e.target.value)} value={content} name='content' style={{ height: '300px' }} placeholder='Content...' className='form-control' rows='3'></textarea>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '250px' }}>
+            <div className='row'>
+              <Link to='/blogs' onClick={saveBlog} className='btn btn-primary w-90'>
+                Save & Send Email
+              </Link>
             </div>
+            <div className='row'>
+              <Link to='/blogs' onClick={cancel} className='btn btn-danger w-70'>
+                Cancel
+              </Link>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
-        )
-    }
-}
-
-export default CreateBlogComponent
+export default CreateBlogComponent;

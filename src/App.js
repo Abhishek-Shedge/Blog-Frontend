@@ -15,7 +15,7 @@ function App() {
                   <Route path="/" element={<ListBlogComponent/>}/>
                   <Route path="/blogs" element={<ListBlogComponent/>}/>
                   <Route path="/add-blog" element={<CreateBlogComponent/>}/>
-                  <Route path='/user-blog/:userId' element={<UserBlogComponent />} /> //now added
+                  <Route path='/user-blog/:userId' element={<UserBlogComponent />} />
                 </Routes>
               </div>
           </div>
